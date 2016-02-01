@@ -306,6 +306,15 @@ public class IniFileReader {
         }
     }
     
+    public static final String DEFAULT_ENCODING = "ASCII";
+    
+    /**
+     * The text encoding for writing String to files.
+     * 
+     * @since 1.1.2
+     */
+    private String encoding;
+    
     /**
      * A reference to the file which will be read in as an INI file.
      * 
@@ -326,11 +335,28 @@ public class IniFileReader {
      * which will read from the given file and populate the given data from the
      * file into the given <code>IniFile</code> object.</p>
      * 
+     * The text encoding is set to IniFileReader.DEFAULT_ENCODING.
+     * 
      * @param ini The IniFile which will be populated.
      * @param file The file that will be read as an INI file.
      * @since 0.1.14
      */
     public IniFileReader( IniFile ini, File file ) {
+
+        this(ini, file, DEFAULT_ENCODING);
+    }
+    
+    /**
+     * Default constructor, creates a new <code>IniFileReader</code> object
+     * which will read from the given file and populate the given data from the
+     * file into the given <code>IniFile</code> object.</p>
+     * 
+     * @param ini The IniFile which will be populated.
+     * @param file The file that will be read as an INI file.
+     * @param encoding The text file encoding.
+     * @since 1.1.2
+     */
+    public IniFileReader( IniFile ini, File file, String encoding ) {
 
         //**********************************************************************
         // Step 1 - Check that neither of the arguments are null
@@ -344,12 +370,14 @@ public class IniFileReader {
             throw new NullPointerException( "The given File cannot be null." );
         }
 
+
         //**********************************************************************
         // Step 2 - set the fields of this object.
         //**********************************************************************
         
         this.file = file;
         this.ini = ini;
+        this.encoding = encoding;
     }
     
     /**
@@ -378,7 +406,7 @@ public class IniFileReader {
         //**********************************************************************
         reader = new BufferedReader(
               new InputStreamReader(
-                      new FileInputStream(file), IniFileWriter.ENCODING )
+                      new FileInputStream(file), encoding )
         );
 
         //**********************************************************************

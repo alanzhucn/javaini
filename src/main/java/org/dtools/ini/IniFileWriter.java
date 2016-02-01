@@ -32,10 +32,17 @@ import java.io.*;
 public class IniFileWriter {
 
     /**
-     * The text encoding for writing String to files.
+     * The default text encoding for writing String to files.
      * @since 0.1.16
      */
-    public static final String ENCODING = "ASCII";
+    public static final String DEFAULT_ENCODING = "ASCII";
+    
+    /**
+     * The text encoding for writing String to files.
+     * 
+     * @since 1.1.2
+     */
+    private String encoding;
     
     /**
      * The <code>IniFile<code> to write to the hard disk. 
@@ -72,6 +79,7 @@ public class IniFileWriter {
 
     /**
      * Creates a new IniFileWriter thread instance.
+     * The encoding is set to <code>IniFileWriter.DEFAULT_ENCODING</code>
      * 
      * @param ini The IniFile to write.
      * @param file The File where to write the IniFile to.
@@ -80,6 +88,20 @@ public class IniFileWriter {
      */
     public IniFileWriter( IniFile ini, File file ) {
 
+        this(ini, file, DEFAULT_ENCODING);
+    }
+    
+    /**
+     * Creates a new IniFileWriter thread instance.
+     * 
+     * @param ini The IniFile to write.
+     * @param file The File where to write the IniFile to.
+     * @param encoding The text encoding for the file
+     * 
+     * @since 1.1.2
+     */
+    public IniFileWriter( IniFile ini, File file, String encoding ) {
+        
         if( ini == null ) {
             throw new IllegalArgumentException( "Cannot write a null IniFile" );
         }
@@ -88,8 +110,13 @@ public class IniFileWriter {
                     "Cannot write an IniFile to a null file" );
         }
         
+        if (encoding == null) {
+            encoding = DEFAULT_ENCODING;
+        }
+        
         this.ini = ini;
         this.file = file;
+        this.encoding = encoding;
         
         // set parameters of IniFileWriter object
         setIncludeSpaces( false );
@@ -365,7 +392,7 @@ public class IniFileWriter {
         // encoding
         
         FileOutputStream fos = new FileOutputStream(file);
-        OutputStreamWriter osw = new OutputStreamWriter(fos, ENCODING );
+        OutputStreamWriter osw = new OutputStreamWriter(fos, encoding );
         bufferWriter = new BufferedWriter( osw );
         
         bufferWriter.write( iniToString(ini) );
